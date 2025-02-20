@@ -8,7 +8,10 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 @Service
-class DeliveryPriceService(@Value("\${delivery.service.baseUrl}") private val baseUrl: String) {
+class DeliveryPriceService(
+    @Value("\${delivery.service.baseUrl}") private val baseUrl: String,
+    private val httpClient: HttpClient
+) {
 
     enum class ApiDataType(val type: String) { // Type safety for building the valid URI
         DYNAMIC("dynamic"),
@@ -16,9 +19,13 @@ class DeliveryPriceService(@Value("\${delivery.service.baseUrl}") private val ba
     }
 
     fun getVenueData(apiDataType: ApiDataType, venueSlug: String): HttpResponse<String>? {
-        val client = HttpClient.newBuilder().build() // Used for sending requests and retrieving responses
         val request = HttpRequest.newBuilder()
-            .uri(URI("$baseUrl/$venueSlug/${apiDataType.type}")).build() // Request static or dynamic venue data from external API
-        return client.send(request, HttpResponse.BodyHandlers.ofString()) // Return response object if request was successful
+            .uri(URI("$baseUrl/$venueSlug/${apiDataType.type}"))
+            .build() // Request static or dynamic venue data from external API
+
+        return httpClient.send(
+            request,
+            HttpResponse.BodyHandlers.ofString()
+        ) // Return response object if request was successful
     }
 }
