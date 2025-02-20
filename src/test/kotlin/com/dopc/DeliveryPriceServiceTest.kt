@@ -50,5 +50,4 @@ class DeliveryPriceServiceTest {
         assertThat(response).isNotNull
         assertThat(response?.body()).isEqualTo("Mocked API response")
     }
-
 }
