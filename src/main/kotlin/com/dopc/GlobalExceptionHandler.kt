@@ -12,7 +12,12 @@ class GlobalExceptionHandler {
     // https://datatracker.ietf.org/doc/html/rfc9457
     @ExceptionHandler(InvalidCoordinatesException::class)
     fun handleInvalidCoordinatesException(exception: InvalidCoordinatesException): ErrorResponse {
-        return ErrorResponse.builder(exception, HttpStatus.BAD_REQUEST, exception.message ?: "invalid coordinate")
+        return ErrorResponse.builder(
+            exception,
+            HttpStatus.BAD_REQUEST,
+            exception.message ?: "coordinates not within valid range"
+        )
+            .title("Invalid coordinates")
             .build()
     }
 }
