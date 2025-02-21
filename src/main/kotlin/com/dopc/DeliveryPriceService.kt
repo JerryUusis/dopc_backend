@@ -1,9 +1,8 @@
 package com.dopc
 
+import com.dopc.exception.InvalidCoordinatesException
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -37,11 +36,11 @@ class DeliveryPriceService(
     fun calculateStraightLineDistance(userLat: Double, userLong: Double, venueLat: Double, venueLong: Double): Int {
         // Validate latitude
         if (!validateLatitude(userLat) || !validateLatitude(venueLat)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Latitude must be between -90 and 90")
+            throw InvalidCoordinatesException("Latitude must be between -90 and 90")
         }
         // Validate longitude
         if (!validateLongitude(userLong) || !validateLongitude(venueLong)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Latitude must be between -180 and 180")
+            throw InvalidCoordinatesException("Longitude must be between -180 and 180")
         }
 
         val radius = 6371.071 // Radius of the Earth in kilometers

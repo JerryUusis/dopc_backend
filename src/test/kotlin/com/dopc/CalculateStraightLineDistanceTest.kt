@@ -1,13 +1,11 @@
 package com.dopc
 
-import com.dopc.DeliveryPriceService
+import com.dopc.exception.InvalidCoordinatesException
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
 
 @SpringBootTest
 class CalculateStraightLineDistanceTest {
@@ -29,10 +27,9 @@ class CalculateStraightLineDistanceTest {
 
     @Test
     fun `should throw error with latitude over 90 degrees`() {
-        val exception = assertThrows(ResponseStatusException::class.java) {
+        val exception = assertThrows(InvalidCoordinatesException::class.java) {
             deliveryPriceService.calculateStraightLineDistance(91.0001, userLong, venueLat, venueLong)
         }
         assertThat(exception).hasMessageContaining("Latitude must be between -90 and 90")
-        assertThat(exception.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }
