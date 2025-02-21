@@ -1,4 +1,4 @@
-package com.dopc
+package com.dopc.service
 
 import com.dopc.exception.InvalidCoordinatesException
 import org.springframework.beans.factory.annotation.Value
@@ -35,11 +35,12 @@ class DeliveryPriceService(
     // https://mapsplatform.google.com/resources/blog/how-calculate-distances-map-maps-javascript-api/
     fun calculateStraightLineDistance(userLat: Double, userLong: Double, venueLat: Double, venueLong: Double): Int {
         // Validate latitude
-        if (!validateLatitude(userLat) || !validateLatitude(venueLat)) {
+        // https://kotlinlang.org/docs/ranges.html#ranges
+        if (userLat !in -90.0..90.0 || venueLat !in -90.0..90.0) {
             throw InvalidCoordinatesException("Latitude must be between -90 and 90")
         }
         // Validate longitude
-        if (!validateLongitude(userLong) || !validateLongitude(venueLong)) {
+        if (userLong !in -180.0..180.0 || venueLong !in -180.0..180.0) {
             throw InvalidCoordinatesException("Longitude must be between -180 and 180")
         }
 
@@ -56,12 +57,6 @@ class DeliveryPriceService(
         val distance = 2 * radius * asin(sqrt(a))
 
         return (distance * 1000).roundToInt() // Return in meters
-    }
-
-    // https://kotlinlang.org/docs/ranges.html#ranges
-    // Checks whether latitude is in valid range
-    fun validateLatitude(latitude: Double): Boolean {
-        return latitude in -90.0..90.0
     }
 
     fun validateLongitude(longitude: Double): Boolean {
