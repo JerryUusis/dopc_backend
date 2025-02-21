@@ -1,8 +1,8 @@
 package com.dopc.controller
 
 import com.dopc.QueryObjectDTO
-import com.dopc.DeliveryPriceService
-import com.dopc.DeliveryPriceService.ApiDataType
+import com.dopc.service.DeliveryPriceService
+import com.dopc.service.DeliveryPriceService.ApiDataType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
