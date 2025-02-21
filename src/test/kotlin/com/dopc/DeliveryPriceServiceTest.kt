@@ -1,7 +1,8 @@
 package com.dopc
 
+import com.dopc.service.DeliveryPriceService
 import org.junit.jupiter.api.Test
-import com.dopc.DeliveryPriceService.ApiDataType
+import com.dopc.service.DeliveryPriceService.ApiDataType
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.mockk
