@@ -1,6 +1,7 @@
 package com.dopc.service
 
 import com.dopc.exception.InvalidCoordinatesException
+import com.dopc.exception.InvalidSurchargeParametersException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.net.URI
@@ -59,7 +60,10 @@ class DeliveryPriceService(
         return (distance * 1000).roundToInt() // Return in meters
     }
 
-    fun validateLongitude(longitude: Double): Boolean {
-        return longitude in -180.0..180.0
+    fun getSurcharge(valueInCents: Int, max: Int): Int {
+        if (valueInCents > max) {
+            throw InvalidSurchargeParametersException("valueInCents: $valueInCents can't be larger than max: $max")
+        }
+        return max - valueInCents
     }
 }

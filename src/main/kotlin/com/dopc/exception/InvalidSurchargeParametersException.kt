@@ -1,4 +1,3 @@
 package com.dopc.exception
 
-class InvalidSurchargeParametersException {
-}
+class InvalidSurchargeParametersException(message: String) : RuntimeException(message)
