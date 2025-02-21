@@ -1,11 +1,13 @@
 package com.dopc
 
+import com.dopc.exception.InvalidCoordinatesException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import kotlin.math.*
 
 @Service
 class DeliveryPriceService(
@@ -27,5 +29,42 @@ class DeliveryPriceService(
             request,
             HttpResponse.BodyHandlers.ofString()
         ) // Return response object if request was successful
+    }
+
+    // Use haversine formula for calculating straight line distance
+    // https://mapsplatform.google.com/resources/blog/how-calculate-distances-map-maps-javascript-api/
+    fun calculateStraightLineDistance(userLat: Double, userLong: Double, venueLat: Double, venueLong: Double): Int {
+        // Validate latitude
+        if (!validateLatitude(userLat) || !validateLatitude(venueLat)) {
+            throw InvalidCoordinatesException("Latitude must be between -90 and 90")
+        }
+        // Validate longitude
+        if (!validateLongitude(userLong) || !validateLongitude(venueLong)) {
+            throw InvalidCoordinatesException("Longitude must be between -180 and 180")
+        }
+
+        val radius = 6371.071 // Radius of the Earth in kilometers
+
+        val userLatRad = Math.toRadians(userLat)  // Convert degrees to radians
+        val venueLatRad = Math.toRadians(venueLat)
+        val diffLat = venueLatRad - userLatRad  // Radian difference (latitudes)
+        val diffLong = Math.toRadians(venueLong - userLong) // Radian difference (longitudes)
+
+        val a = sin(diffLat / 2).pow(2) +
+                cos(userLatRad) * cos(venueLatRad) * sin(diffLong / 2).pow(2)
+
+        val distance = 2 * radius * asin(sqrt(a))
+
+        return (distance * 1000).roundToInt() // Return in meters
+    }
+
+    // https://kotlinlang.org/docs/ranges.html#ranges
+    // Checks whether latitude is in valid range
+    fun validateLatitude(latitude: Double): Boolean {
+        return latitude in -90.0..90.0
+    }
+
+    fun validateLongitude(longitude: Double): Boolean {
+        return longitude in -180.0..180.0
     }
 }
